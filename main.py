@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import schedules
-from tensorflow.keras.optimizers import AdamW
+# from tensorflow.keras.optimizers import AdamW
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -50,9 +50,9 @@ lr_schedule = keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate=1e-3,
     decay_steps=10000,
     decay_rate=0.9)
-optimizer = AdamW(learning_rate=lr_schedule)
+# optimizer = AdamW(learning_rate=lr_schedule)
 
-model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer=optimizer)
+model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer="AdamW", learning_rate=lr_schedule)
 
 # Early stopping
 es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=200)
