@@ -13,8 +13,8 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input
 # from tensorflow.keras.optimizers import AdamW
 from sklearn.metrics import r2_score
-from keras.optimizers import Adam
-from keras.optimizers import schedules 
+# from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import schedules 
 from matplotlib import pyplot
 from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
