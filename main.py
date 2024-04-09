@@ -1,4 +1,4 @@
-#main
+# main
 # imports
 from keras.models import Sequential
 from keras.layers import Dense
@@ -19,8 +19,8 @@ import numpy as np
 import optuna
 
 # Assuming your CSVs are formatted correctly for this task
-TrainingSet = np.genfromtxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/DATASET_T2.csv", delimiter=",", skip_header=True)
-ValidationSet = np.genfromtxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/DATASET_V2.csv", delimiter=",", skip_header=True)
+TrainingSet = np.genfromtxt("/home/deamoon_uw_nn/bucket_source/DATASET_T2.csv", delimiter=",", skip_header=True)
+ValidationSet = np.genfromtxt("/home/deamoon_uw_nn/bucket_source/DATASET_V2.csv", delimiter=",", skip_header=True)
 
 # Split into input (X) and outputs (Y1, Y2)
 X_train = TrainingSet[:,0:5]  # Assuming the first column is the input
@@ -62,24 +62,15 @@ PredValSet = model.predict(X_val)
 
 # Save predictions
 # Note: This will give you two arrays for each set of predictions, handle each according to your needs
-np.savetxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/T_results_output1.csv", PredTrainSet[0], delimiter=",")
-np.savetxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/T_results_output2.csv", PredTrainSet[1], delimiter=",")
-np.savetxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/V_results_output1.csv", PredValSet[0], delimiter=",")
-np.savetxt("/content/drive/MyDrive/Colab Notebooks/UW/Dataset/V_results_output2.csv", PredValSet[1], delimiter=",")
-
+np.savetxt("/home/deamoon_uw_nn/bucket_source/T_results_output1.csv", PredTrainSet[0], delimiter=",")
+np.savetxt("/home/deamoon_uw_nn/bucket_source/T_results_output2.csv", PredTrainSet[1], delimiter=",")
+np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output1.csv", PredValSet[0], delimiter=",")
+np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output2.csv", PredValSet[1], delimiter=",")
 
 # Set target, initial & bounds
 target_outputs = np.array([300,600])
 initial_guess = np.array([15, 0.9, 15, 2.5, 1])
 bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
-
-# Assume model is your trained model
-# target_outputs are the desired output values you want to achieve
-# target_outputs = np.array([300,600])
-
-# Initial guess
-# initial_guess = np.array([10, 0.8, 10, 1, 1])
-
 
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
@@ -113,14 +104,7 @@ study = optuna.create_study(direction='minimize')
 study.optimize(optimize_with_cobyla, n_trials=10)
 
 # Print the optimization results
-print("Best trial:")
 trial = study.best_trial
-
-print(f"Value: {trial.value}")
-print("Params: ")
-for key, value in trial.params.items():
-    print(f"  {key}: {value}")
-# Extract the best parameters
 optimized_params = study.best_trial.params
 
 # Since 'optuna' returns the parameters as a dictionary, we need to adjust them to match the 'minimize' function's expected format
@@ -132,8 +116,6 @@ optimized_options = {
 }
 
 # Define bounds as constraints for COBYLA
-# Assume you have 5 inputs, each with a specific range
-# bounds = [(0.005, 100), (0.001,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
 # Convert bounds to constraints for COBYLA
 def constraint_func(params, index, bound, lower=True):
     """Generates a function to enforce lower or upper bounds."""
@@ -157,6 +139,7 @@ result = minimize(objective_function, initial_guess, method='COBYLA',
 if result.success:
     optimal_inputs = np.round(result.x, 2)
     print("Optimal inputs that lead to desired outputs:", optimal_inputs)
+    np.savetxt("/home/deamoon_uw_nn/bucket_source/opti_res.csv", optimal_inputs, delimiter=",")
 else:
     print("Optimization failed:", result.message)
      
