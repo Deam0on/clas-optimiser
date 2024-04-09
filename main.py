@@ -53,7 +53,7 @@ lr_schedule = keras.optimizers.schedules.ExponentialDecay(
 # optimizer = AdamW(learning_rate=lr_schedule)
 
 # model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer="Adam", learning_rate=lr_schedule)
-model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, keras.optimizers.Adam(learning_rate=lr_schedule))
+model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer = keras.optimizers.Adam(learning_rate=lr_schedule))
 
 # Early stopping
 es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=200)
