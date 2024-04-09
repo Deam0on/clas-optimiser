@@ -3,7 +3,6 @@
 import numpy as np
 import optuna
 import pandas as pd
-import keras
 import matplotlib.pyplot as plt
 
 from tensorflow import keras
