@@ -1,5 +1,11 @@
 # main
 # imports
+import numpy as np
+import optuna
+import pandas as pd
+import keras
+import matplotlib.pyplot as plt
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
@@ -7,16 +13,13 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Input
 # from tensorflow.keras.optimizers import AdamW
 from sklearn.metrics import r2_score
-import matplotlib.pyplot as plt
 from keras.optimizers import Adam
-import keras
+from keras.optimizers import schedules 
 from matplotlib import pyplot
 from keras.callbacks import EarlyStopping
-import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from scipy.optimize import minimize
-import numpy as np
-import optuna
+
 
 # Assuming your CSVs are formatted correctly for this task
 TrainingSet = np.genfromtxt("/home/deamoon_uw_nn/bucket_source/DATASET_T2.csv", delimiter=",", skip_header=True)
