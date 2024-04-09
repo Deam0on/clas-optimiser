@@ -17,7 +17,7 @@ from keras.models import Model
 from keras.layers import Dense, Input
 # from tensorflow.keras.optimizers import AdamW
 from sklearn.metrics import r2_score
-# from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam
 from matplotlib import pyplot
 from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
@@ -52,7 +52,8 @@ lr_schedule = keras.optimizers.schedules.ExponentialDecay(
     decay_rate=0.9)
 # optimizer = AdamW(learning_rate=lr_schedule)
 
-model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer="Adam", learning_rate=lr_schedule)
+# model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, optimizer="Adam", learning_rate=lr_schedule)
+model.compile(loss={'output1': 'mean_squared_error', 'output2': 'mean_squared_error'}, keras.optimizers.Adam(learning_rate=lr_schedule))
 
 # Early stopping
 es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=200)
