@@ -6,15 +6,18 @@ import pandas as pd
 import keras
 import matplotlib.pyplot as plt
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Input
+from tensorflow import keras
+from tensorflow.keras import optimizers
+from tensorflow.keras.optimizers import schedules
+
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import Dropout
+from keras.models import Model
+from keras.layers import Dense, Input
 # from tensorflow.keras.optimizers import AdamW
 from sklearn.metrics import r2_score
 # from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.optimizers import schedules 
 from matplotlib import pyplot
 from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
