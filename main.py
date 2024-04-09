@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import schedules
-
+from tensorflow.keras.optimizers import AdamW
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
