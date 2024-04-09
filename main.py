@@ -67,6 +67,8 @@ np.savetxt("/home/deamoon_uw_nn/bucket_source/T_results_output2.csv", PredTrainS
 np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output1.csv", PredValSet[0], delimiter=",")
 np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output2.csv", PredValSet[1], delimiter=",")
 
+model.save('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')
+
 # Set target, initial & bounds
 target_outputs = np.array([300,600])
 initial_guess = np.array([15, 0.9, 15, 2.5, 1])
