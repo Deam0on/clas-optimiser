@@ -23,6 +23,7 @@ from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
 from scipy.optimize import minimize
 
+import google.cloud
 from google.cloud import storage
 
 #Pull from bucket
