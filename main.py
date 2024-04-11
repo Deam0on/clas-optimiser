@@ -23,6 +23,8 @@ from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
 from scipy.optimize import minimize
 
+from google.cloud import storage
+
 #Pull from bucket
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
