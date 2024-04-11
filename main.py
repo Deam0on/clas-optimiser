@@ -55,8 +55,8 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
         )
     )
     
-download_blob("uw-nn-storage", "DATASET_T2.csv", "/home/deamoon_uw_nn/bucket_source")
-download_blob("uw-nn-storage", "DATASET_V2.csv", "/home/deamoon_uw_nn/bucket_source")
+download_blob(uw-nn-storage, DATASET_T2.csv, /home/deamoon_uw_nn/bucket_source)
+download_blob(uw-nn-storage, DATASET_V2.csv, /home/deamoon_uw_nn/bucket_source)
 
 # Assuming your CSVs are formatted correctly for this task
 TrainingSet = np.genfromtxt("/home/deamoon_uw_nn/bucket_source/DATASET_T2.csv", delimiter=",", skip_header=True)
