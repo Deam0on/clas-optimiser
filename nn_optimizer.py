@@ -72,7 +72,6 @@ optimized_params = study.best_trial.params
 # Since 'optuna' returns the parameters as a dictionary, we need to adjust them to match the 'minimize' function's expected format
 optimized_options = {
     "rhobeg": optimized_params["rhobeg"],
-    # "rhoend": optimized_params["rhoend"],
     "maxiter": optimized_params["maxiter"],
     "catol": optimized_params["catol"]
 }
