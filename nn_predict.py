@@ -45,7 +45,7 @@ def objective_function(inputs):
     return error
 
 # Load the optimized parameters from a file
-with open('optimized_params.json', 'r') as f:
+with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'r') as f:
     optimized_params = json.load(f)
 
 # Define bounds as constraints for COBYLA
