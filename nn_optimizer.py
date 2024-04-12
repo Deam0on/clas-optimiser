@@ -28,7 +28,7 @@ from keras.models import load_model
 import json
 
 # Load model
-model = load_model('/home/deamoon_uw_nn/bucket_source/my_model.h5')  # Loads the model
+model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
 
 # Set target, initial & bounds
 target_outputs = np.array([300,600])
