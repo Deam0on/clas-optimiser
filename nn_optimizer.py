@@ -78,5 +78,5 @@ optimized_options = {
 }
 
 # Dump the optimized parameters into a json file
-with open('optimized_params.json', 'w') as json_file:
+with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'w') as json_file:
     json.dump(optimized_options, json_file)
