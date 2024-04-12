@@ -25,6 +25,7 @@ from keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
 from scipy.optimize import minimize
 from keras.models import load_model
+import json
 
 # Load model
 model = load_model('/home/deamoon_uw_nn/bucket_source/my_model.h5')  # Loads the model
@@ -76,30 +77,6 @@ optimized_options = {
     "catol": optimized_params["catol"]
 }
 
-# Define bounds as constraints for COBYLA
-# Convert bounds to constraints for COBYLA
-def constraint_func(params, index, bound, lower=True):
-    """Generates a function to enforce lower or upper bounds."""
-    if lower:
-        return params[index] - bound  # For lower bound
-    else:
-        return bound - params[index]  # For upper bound
-
-constraints = []
-for i, (lower_bound, upper_bound) in enumerate(bounds):
-    # Lower bound constraint for each parameter
-    constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, lower_bound, True)})
-    # Upper bound constraint for each parameter
-    constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, upper_bound, False)})
-
-
-# Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
-result = minimize(objective_function, initial_guess, method='COBYLA',
-                  options=optimized_params, constraints=constraints)
-
-if result.success:
-    optimal_inputs = np.round(result.x, 2)
-    print("Optimal inputs that lead to desired outputs:", optimal_inputs)
-    np.savetxt("/home/deamoon_uw_nn/bucket_source/opti_res.csv", optimal_inputs, delimiter=",")
-else:
-    print("Optimization failed:", result.message)
+# Dump the optimized parameters into a json file
+with open('optimized_params.json', 'w') as json_file:
+    json.dump(optimized_options, json_file)
