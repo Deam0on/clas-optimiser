@@ -61,7 +61,7 @@ target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn
 # target_outputs = np.array([300,600])
 # initial_guess = np.array([15, 0.9, 15, 2.5, 1])
 
-bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
+bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
 
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
