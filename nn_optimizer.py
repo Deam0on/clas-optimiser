@@ -31,9 +31,10 @@ import json
 model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
 
 # Set target, initial & bounds
-target_outputs = np.array([300,600])
-initial_guess = np.array([15, 0.9, 15, 2.5, 1])
-bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
+os.system("python3 /home/deamoon_uw_nn/uw-nn-adam/nn_pull_param.py")
+# target_outputs = np.array([300,600])
+# initial_guess = np.array([15, 0.9, 15, 2.5, 1])
+# bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
 
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
