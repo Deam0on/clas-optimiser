@@ -31,25 +31,26 @@ import json
 model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
 
 # Set target, initial & bounds
-# def load_from_json(file_path):
-#     # Read data from JSON file
-#     with open(file_path, 'r') as f:
-#         data = json.load(f)
+def load_from_json(file_path):
+    # Read data from JSON file
+    with open(file_path, 'r') as f:
+        data = json.load(f)
 
-#     # Convert lists back to numpy arrays and tuples
-#     target_outputs = np.array(data['target_outputs'])
-#     initial_guess = np.array(data['initial_guess'])
-#     bounds = [tuple(bound) for bound in data['bounds']]  # Convert lists of bounds back to tuples
+    # Convert lists back to numpy arrays and tuples
+    target_outputs = np.array(data['target_outputs'])
+    initial_guess = np.array(data['initial_guess'])
+    # bounds = [tuple(bound) for bound in data['bounds']]  # Convert lists of bounds back to tuples
 
-#     return target_outputs, initial_guess, np.array(bounds)
+    return target_outputs, initial_guess
 
-# # Example usage:
-# os.system("python3 /home/deamoon_uw_nn/uw-nn-adam/nn_pull_param.py")
-# target_outputs, initial_guess, bounds = load_from_json('/home/deamoon_uw_nn/bucket_source/pull_variables.json')
+# Example usage:
+os.system("python3 /home/deamoon_uw_nn/uw-nn-adam/nn_pull_param.py")
+target_outputs, initial_guess = load_from_json('/home/deamoon_uw_nn/bucket_source/pull_variables.json')
 
 
-target_outputs = np.array([300,600])
-initial_guess = np.array([15, 0.9, 15, 2.5, 1])
+# target_outputs = np.array([300,600])
+# initial_guess = np.array([15, 0.9, 15, 2.5, 1])
+
 bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
 
 def objective_function(inputs):
