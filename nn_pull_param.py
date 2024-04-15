@@ -4,57 +4,39 @@ import numpy as np
 import pandas as pd
 import json
 
-def extract_variables_from_csv(file_path):
-    # Load the CSV file
-    data = pd.read_csv(file_path, header=None, names=['Variable', 'Value'])
+def csv_to_json(csv_file_path, json_file_path):
+    # Load the CSV data
+    data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
     
-    # Define the keys for each category
-    target_outputs_keys = ['M_V', 'M_N']
-    initial_guess_keys = ['F_total', 'AS/T', 'C(API)', 'C(SDS)', 'F_min']
+    # Convert to a dictionary
+    data_dict = dict(zip(data['Key'], data['Value']))
     
-    # Extract the target outputs
-    target_outputs = np.array([data[data['Variable'] == key]['Value'].astype(float).values[0] for key in target_outputs_keys])
-    
-    # Extract the initial guess values
-    initial_guess = np.array([data[data['Variable'] == key]['Value'].astype(float).values[0] for key in initial_guess_keys])
+    # Save as JSON
+    with open(json_file_path, 'w') as json_file:
+        json.dump(data_dict, json_file)
 
+def load_data_and_create_arrays(json_file_path):
+    # Load JSON data
+    with open(json_file_path, 'r') as json_file:
+        data = json.load(json_file)
     
+    # Extract arrays based on keys
+    target_outputs = np.array([data['M_V'], data['M_N']])
+    initial_guess = np.array([data['F_total'], data['AS/T'], data['C(API)'], data['C(SDS)'], data['C(HPMC)']])  # replace 'another_key' as needed
+
     return target_outputs, initial_guess
 
-# def extract_variables_from_csv(file_path):
-#     # Load the CSV file
-#     data = pd.read_csv(file_path, header=None, names=['Variable', 'Value'])
-    
-#     # Extract the target outputs
-#     target_outputs = np.array([data.iloc[0, 1], data.iloc[1, 1]])
-
-#     # Extract the initial guess values (assuming they are in the first set of variable listings)
-#     initial_guess_indices = [2, 3, 4, 5, 6]  # indices of the initial guesses based on your CSV snippet
-#     initial_guess = np.array([data.iloc[i, 1] for i in initial_guess_indices])
-
-#     # # Extract bounds (assuming each variable's bounds are in sequence following the initial guesses)
-#     # bounds = []
-#     # for i in range(len(initial_guess_indices)):
-#     #     min_index = 7 + 2*i  # starting index for min bounds based on your CSV snippet
-#     #     max_index = min_index + 1
-#     #     bounds.append((data.iloc[min_index, 1], data.iloc[max_index, 1]))
-    
-#     return target_outputs, initial_guess
-
-def save_to_json(target_outputs, initial_guess, bounds, file_path):
-    # Prepare data for JSON serialization; convert numpy arrays to lists
-    data = {
-        'target_outputs': target_outputs.tolist(),
-        'initial_guess': initial_guess.tolist()
-    }
-
-    # Write JSON data to file
-    with open(file_path, 'w') as f:
-        json.dump(data, f)
-
-# Example usage:
-
+# Usage example
 os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
-file_path = '/home/deamoon_uw_nn/bucket_source/nn_push.csv'
-target_outputs, initial_guess, bounds = extract_variables_from_csv(file_path)
-save_to_json(target_outputs, initial_guess, '/home/deamoon_uw_nn/bucket_source/pull_variables.json')
+csv_to_json('/home/deamoon_uw_nn/bucket_source/nn_push.csv', '/home/deamoon_uw_nn/bucket_source/nn_push.json')
+target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn/bucket_source/nn_push.json')
+
+
+
+
+
+
+
+
+
+
