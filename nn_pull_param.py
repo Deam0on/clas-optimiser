@@ -1,3 +1,5 @@
+import os
+import sys
 import numpy as np
 import pandas as pd
 
@@ -18,8 +20,8 @@ def extract_variables_from_csv(file_path):
     
     return target_outputs, initial_guess, bounds
 
-
-file_path = '/home/deamoon_uw_nn/bucket_source/'
+os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
+file_path = '/home/deamoon_uw_nn/bucket_source/nn_push.csv'
 target_outputs, initial_guess, bounds = extract_variables_from_csv(file_path)
 print("Target Outputs:", target_outputs)
 print("Initial Guess:", initial_guess)
