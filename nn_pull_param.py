@@ -6,17 +6,23 @@ import pandas as pd
 def extract_variables_from_csv(file_path):
     # Load the CSV file
     data = pd.read_csv(file_path, header=None, names=['Variable', 'Value'])
+    
     # Define the keys for each category
     target_outputs_keys = ['M_V', 'M_N']
     initial_guess_keys = ['F_total', 'AS/T', 'C(API)', 'C(SDS)', 'F_min']
-    bounds_keys = {'F_total','AS/T','C(API)','C(SDS)','F_min'}
     
     # Extract the target outputs
     target_outputs = np.array([data[data['Variable'] == key]['Value'].astype(float).values[0] for key in target_outputs_keys])
+    
     # Extract the initial guess values
     initial_guess = np.array([data[data['Variable'] == key]['Value'].astype(float).values[0] for key in initial_guess_keys])
-    # Extract bounds using the bounds_keys dictionary
-    bounds = [bounds_keys[key] for key in initial_guess_keys]
+    
+    # Extract bounds using the variable names suffixed with '_min' and '_max'
+    bounds = []
+    for key in initial_guess_keys:
+        min_val = data[data['Variable'] == f"{key}_min"]['Value'].astype(float).values[0]
+        max_val = data[data['Variable'] == f"{key}_max"]['Value'].astype(float).values[0]
+        bounds.append((min_val, max_val))
     
     return target_outputs, initial_guess, bounds
 
