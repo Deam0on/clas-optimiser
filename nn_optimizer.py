@@ -73,10 +73,10 @@ def objective_function(inputs):
     return error
 
 def optimize_with_cobyla(trial):
-    rhobeg = trial.suggest_float("rhobeg", 0.1, 2.0)
+    rhobeg = trial.suggest_float("rhobeg", 0.1, 1.0)
     # rhoend = trial.suggest_float("rhoend", 1e-6, 1e-2)
-    maxiter = trial.suggest_int("maxiter", 100, 100000)
-    catol = trial.suggest_float("catol", 1e-4, 1e-1)
+    maxiter = trial.suggest_int("maxiter", 100, 10000)
+    catol = trial.suggest_float("catol", 1e-4, 1e-2)
 
     # Define bounds as constraints for COBYLA
     # bounds = [(0.005, 100), (0.001,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
