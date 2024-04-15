@@ -73,10 +73,10 @@ def objective_function(inputs):
     return error
 
 def optimize_with_cobyla(trial):
-    rhobeg = trial.suggest_float("rhobeg", 0.1, 5.0)
+    rhobeg = trial.suggest_float("rhobeg", 0.1, 2.0)
     # rhoend = trial.suggest_float("rhoend", 1e-6, 1e-2)
     maxiter = trial.suggest_int("maxiter", 100, 100000)
-    catol = trial.suggest_float("catol", 1e-4, 1)
+    catol = trial.suggest_float("catol", 1e-4, 1e-1)
 
     # Define bounds as constraints for COBYLA
     # bounds = [(0.005, 100), (0.001,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
@@ -91,8 +91,9 @@ def optimize_with_cobyla(trial):
     return result.fun
 
 # Define the optimization study
-study = optuna.create_study(direction='minimize')
-study.optimize(optimize_with_cobyla, n_trials=50, n_jobs=-1)
+# study = optuna.create_study(direction='minimize')
+study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
+study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1)
 
 # Print the optimization results
 trial = study.best_trial
