@@ -92,7 +92,7 @@ def optimize_with_cobyla(trial):
 
 # Define the optimization study
 study = optuna.create_study(direction='minimize')
-study.optimize(optimize_with_cobyla, n_trials=50)
+study.optimize(optimize_with_cobyla, n_trials=50, n_jobs=-1)
 
 # Print the optimization results
 trial = study.best_trial
