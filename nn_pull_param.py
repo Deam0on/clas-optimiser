@@ -17,11 +17,11 @@ def extract_variables_from_csv(file_path):
     # Extract the initial guess values
     initial_guess = np.array([data[data['Variable'] == key]['Value'].astype(float).values[0] for key in initial_guess_keys])
     
-    # Extract bounds using the variable names suffixed with '_min' and '_max'
+    # Extract bounds by splitting the string value by comma and converting to float tuple
     bounds = []
     for key in initial_guess_keys:
-        min_val = data[data['Variable'] == f"{key}_min"]['Value'].astype(float).values[0]
-        max_val = data[data['Variable'] == f"{key}_max"]['Value'].astype(float).values[0]
+        bounds_str = data[data['Variable'] == f"{key}_bounds"]['Value'].values[0]
+        min_val, max_val = map(float, bounds_str.split(','))
         bounds.append((min_val, max_val))
     
     return target_outputs, initial_guess, bounds
