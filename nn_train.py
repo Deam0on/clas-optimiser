@@ -65,7 +65,7 @@ es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=200)
 # Fit the model
 history = model.fit(X_train, {'output1': Y_train[0], 'output2': Y_train[1]},
                     validation_data=(X_val, {'output1': Y_val[0], 'output2': Y_val[1]}),
-                    epochs=10000000, batch_size=100, verbose=2, callbacks=[es])
+                    epochs=10000000, batch_size=10, verbose=2, callbacks=[es])
 
 # Calculate predictions
 PredTrainSet = model.predict(X_train)
