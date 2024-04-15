@@ -61,7 +61,7 @@ target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn
 # target_outputs = np.array([300,600])
 # initial_guess = np.array([15, 0.9, 15, 2.5, 1])
 
-bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
+bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
 
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
@@ -73,10 +73,10 @@ def objective_function(inputs):
     return error
 
 def optimize_with_cobyla(trial):
-    rhobeg = trial.suggest_float("rhobeg", 0.1, 2.0)
+    rhobeg = trial.suggest_float("rhobeg", 0.1, 5.0)
     # rhoend = trial.suggest_float("rhoend", 1e-6, 1e-2)
-    maxiter = trial.suggest_int("maxiter", 100, 10000)
-    catol = trial.suggest_float("catol", 1e-4, 1e-1)
+    maxiter = trial.suggest_int("maxiter", 100, 100000)
+    catol = trial.suggest_float("catol", 1e-4, 1)
 
     # Define bounds as constraints for COBYLA
     # bounds = [(0.005, 100), (0.001,0.999), (0.001, 60), (0.001, 15), (0.001, 15)]
@@ -92,7 +92,7 @@ def optimize_with_cobyla(trial):
 
 # Define the optimization study
 study = optuna.create_study(direction='minimize')
-study.optimize(optimize_with_cobyla, n_trials=10)
+study.optimize(optimize_with_cobyla, n_trials=50)
 
 # Print the optimization results
 trial = study.best_trial
