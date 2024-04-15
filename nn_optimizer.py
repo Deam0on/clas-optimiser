@@ -92,7 +92,8 @@ def optimize_with_cobyla(trial):
 
 # Define the optimization study
 # study = optuna.create_study(direction='minimize')
-study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
+study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
+# study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
 study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1)
 
 # Print the optimization results
