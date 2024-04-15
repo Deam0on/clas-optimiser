@@ -2,6 +2,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import json
 
 def extract_variables_from_csv(file_path):
     # Load the CSV file
@@ -23,9 +24,21 @@ def extract_variables_from_csv(file_path):
     
     return target_outputs, initial_guess, np.array(bounds, dtype=float)
 
+def save_to_json(target_outputs, initial_guess, bounds, file_path):
+    # Prepare data for JSON serialization; convert numpy arrays to lists
+    data = {
+        'target_outputs': target_outputs.tolist(),
+        'initial_guess': initial_guess.tolist(),
+        'bounds': [list(map(float, bound)) for bound in bounds]  # Convert tuples to lists of floats
+    }
+
+    # Write JSON data to file
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
+
+# Example usage:
+
 os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
 file_path = '/home/deamoon_uw_nn/bucket_source/nn_push.csv'
 target_outputs, initial_guess, bounds = extract_variables_from_csv(file_path)
-print("Target Outputs:", target_outputs)
-print("Initial Guess:", initial_guess)
-print("Bounds:", bounds)
+save_to_json(target_outputs, initial_guess, bounds, '/home/deamoon_uw_nn/bucket_source/pull_variables.json')
