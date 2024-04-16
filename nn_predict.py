@@ -6,7 +6,7 @@ import numpy as np
 import optuna
 import pandas as pd
 import matplotlib.pyplot as plt
-
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 from tensorflow import keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import schedules
