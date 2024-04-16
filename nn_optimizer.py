@@ -28,8 +28,8 @@ from keras.models import load_model
 import json
 
 # Load model
-# model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
-model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
+model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
+# model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
 
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
