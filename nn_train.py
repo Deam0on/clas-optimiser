@@ -79,4 +79,4 @@ np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output1.csv", PredValSet
 np.savetxt("/home/deamoon_uw_nn/bucket_source/V_results_output2.csv", PredValSet[1], delimiter=",")
 
 # model.save('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')
-model.save('home/deamoon_uw_nn/bucket_source/uw_nn.keras')
+tf.keras.Model.save('home/deamoon_uw_nn/bucket_source/uw_nn.keras')
