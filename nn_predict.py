@@ -27,10 +27,6 @@ from scipy.optimize import minimize
 from keras.models import load_model
 import json
 
-# Load model
-model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
-# model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
-
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -53,17 +49,6 @@ def load_data_and_create_arrays(json_file_path):
 
     return target_outputs, initial_guess
 
-# Usage example
-os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
-csv_to_json('/home/deamoon_uw_nn/bucket_source/nn_push.csv', '/home/deamoon_uw_nn/bucket_source/nn_push.json')
-target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn/bucket_source/nn_push.json')
-
-
-# target_outputs = np.array([300,600])
-# initial_guess = np.array([15, 0.9, 15, 2.5, 1])
-
-bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
-
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
     inputs_reshaped = inputs.reshape(1, -1)
@@ -72,10 +57,6 @@ def objective_function(inputs):
     # Calculate the difference (error) between predicted and target outputs
     error = np.sum((predicted_outputs - target_outputs)**2)
     return error
-
-# Load the optimized parameters from a file
-with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'r') as f:
-    optimized_params = json.load(f)
 
 # Define bounds as constraints for COBYLA
 # Convert bounds to constraints for COBYLA
@@ -86,21 +67,41 @@ def constraint_func(params, index, bound, lower=True):
     else:
         return bound - params[index]  # For upper bound
 
-constraints = []
-for i, (lower_bound, upper_bound) in enumerate(bounds):
-    # Lower bound constraint for each parameter
-    constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, lower_bound, True)})
-    # Upper bound constraint for each parameter
-    constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, upper_bound, False)})
+if __name__ == '__main__':
+
+    # Load model
+    model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
+    # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
+
+    # Usage example
+    os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
+    csv_to_json('/home/deamoon_uw_nn/bucket_source/nn_push.csv', '/home/deamoon_uw_nn/bucket_source/nn_push.json')
+    target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn/bucket_source/nn_push.json')
+    
+    # target_outputs = np.array([300,600])
+    # initial_guess = np.array([15, 0.9, 15, 2.5, 1])
+    
+    bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
+
+    # Load the optimized parameters from a file
+    with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'r') as f:
+        optimized_params = json.load(f)
+
+    constraints = []
+    for i, (lower_bound, upper_bound) in enumerate(bounds):
+        # Lower bound constraint for each parameter
+        constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, lower_bound, True)})
+        # Upper bound constraint for each parameter
+        constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, upper_bound, False)})
 
 
-# Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
-result = minimize(objective_function, initial_guess, method='COBYLA',
-                  options=optimized_params, constraints=constraints)
+    # Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
+    result = minimize(objective_function, initial_guess, method='COBYLA',
+                      options=optimized_params, constraints=constraints)
 
-if result.success:
-    optimal_inputs = np.round(result.x, 2)
-    print("Optimal inputs that lead to desired outputs:", optimal_inputs)
-    np.savetxt("/home/deamoon_uw_nn/bucket_source/opti_res.csv", optimal_inputs, delimiter=",")
-else:
-    print("Optimization failed:", result.message)
+    if result.success:
+        optimal_inputs = np.round(result.x, 2)
+        print("Optimal inputs that lead to desired outputs:", optimal_inputs)
+        np.savetxt("/home/deamoon_uw_nn/bucket_source/opti_res.csv", optimal_inputs, delimiter=",")
+    else:
+        print("Optimization failed:", result.message)
