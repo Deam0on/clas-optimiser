@@ -84,4 +84,5 @@ if __name__ == '__main__':
     
     # model.save('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')
     # Model.save('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')
-    Model.save_model(model, '/home/deamoon_uw_nn/bucket_source/uw_nn.keras')
+    # Model.save_model(model, '/home/deamoon_uw_nn/bucket_source/uw_nn.keras')
+    model.save('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')
