@@ -27,6 +27,8 @@ from scipy.optimize import minimize
 from keras.models import load_model
 import json
 
+from multiprocessing import Pool
+
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -98,7 +100,9 @@ if __name__ == '__main__':
     # study = optuna.create_study(direction='minimize')
     study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
     # study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
-    study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1)
+    
+    with Pool() as p:
+        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
     
     # Print the optimization results
     trial = study.best_trial
