@@ -27,10 +27,6 @@ from scipy.optimize import minimize
 from keras.models import load_model
 import json
 
-# Load model
-model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
-# model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
-
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -52,17 +48,6 @@ def load_data_and_create_arrays(json_file_path):
     initial_guess = np.array([data['F_total'], data['AS/T'], data['C(API)'], data['C(SDS)'], data['C(HPMC)']])  # replace 'another_key' as needed
 
     return target_outputs, initial_guess
-
-# Usage example
-os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
-csv_to_json('/home/deamoon_uw_nn/bucket_source/nn_push.csv', '/home/deamoon_uw_nn/bucket_source/nn_push.json')
-target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn/bucket_source/nn_push.json')
-
-
-# target_outputs = np.array([300,600])
-# initial_guess = np.array([15, 0.9, 15, 2.5, 1])
-
-bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
 
 def objective_function(inputs):
     # Reshape inputs to match the model's expected input shape
@@ -91,23 +76,41 @@ def optimize_with_cobyla(trial):
     # Return the final value of the objective function as the metric to minimize
     return result.fun
 
-# Define the optimization study
-# study = optuna.create_study(direction='minimize')
-study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
-# study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
-study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1)
 
-# Print the optimization results
-trial = study.best_trial
-optimized_params = study.best_trial.params
 
-# Since 'optuna' returns the parameters as a dictionary, we need to adjust them to match the 'minimize' function's expected format
-optimized_options = {
-    "rhobeg": optimized_params["rhobeg"],
-    "maxiter": optimized_params["maxiter"],
-    "catol": optimized_params["catol"]
-}
+if __name__ == '__main__':
 
-# Dump the optimized parameters into a json file
-with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'w') as json_file:
-    json.dump(optimized_options, json_file)
+    # Load model
+    model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
+    # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
+
+    # Usage example
+    os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
+    csv_to_json('/home/deamoon_uw_nn/bucket_source/nn_push.csv', '/home/deamoon_uw_nn/bucket_source/nn_push.json')
+    target_outputs, initial_guess = load_data_and_create_arrays('/home/deamoon_uw_nn/bucket_source/nn_push.json')
+    
+    # target_outputs = np.array([300,600])
+    # initial_guess = np.array([15, 0.9, 15, 2.5, 1])
+
+    bounds = [(1, 50), (0.5,0.999), (0.001, 60), (0.001, 20), (0.001, 20)]
+    
+    # Define the optimization study
+    # study = optuna.create_study(direction='minimize')
+    study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
+    # study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
+    study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1)
+    
+    # Print the optimization results
+    trial = study.best_trial
+    optimized_params = study.best_trial.params
+    
+    # Since 'optuna' returns the parameters as a dictionary, we need to adjust them to match the 'minimize' function's expected format
+    optimized_options = {
+        "rhobeg": optimized_params["rhobeg"],
+        "maxiter": optimized_params["maxiter"],
+        "catol": optimized_params["catol"]
+    }
+    
+    # Dump the optimized parameters into a json file
+    with open('/home/deamoon_uw_nn/bucket_source/optimized_params.json', 'w') as json_file:
+        json.dump(optimized_options, json_file)
