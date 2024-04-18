@@ -101,8 +101,8 @@ if __name__ == '__main__':
     study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
     # study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
     
-    with Pool(processes=4) as p:
-        p.imap(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1), chunksize=10)
+    with Pool() as p:
+        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
     
     # Print the optimization results
     trial = study.best_trial
