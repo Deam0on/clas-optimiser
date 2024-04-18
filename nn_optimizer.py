@@ -83,8 +83,8 @@ def optimize_with_cobyla(trial):
 if __name__ == '__main__':
 
     # Load model
-    model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
-    # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
+    # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
+    model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
 
     # Usage example
     os.system("gsutil -m cp gs://uw-nn-storage_v2/ASP/Upload/nn_push.csv /home/deamoon_uw_nn/bucket_source")
