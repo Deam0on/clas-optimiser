@@ -26,7 +26,7 @@ from sklearn.preprocessing import LabelEncoder
 from scipy.optimize import minimize
 from keras.models import load_model
 import json
-
+import multiprocessing
 from multiprocessing import Pool
 
 # import time
@@ -97,9 +97,14 @@ def optimize_with_cobyla(trial):
     # Return the final value of the objective function as the metric to minimize
     return result.fun
 
+def p_function(trials, jobs):
+    study.optimize(optimize_with_cobyla, n_trials=trials, n_jobs=jobs, callbacks=[trial_time_callback])
+
 
 if __name__ == '__main__':
-
+    
+    jobs = []
+    
     # Load model
     # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
     model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
@@ -122,9 +127,14 @@ if __name__ == '__main__':
     # with Pool() as p:
     #     p.map(optuna_optimize_function, [10]*4)  # Assuming you want to run 10 trials on 4 different processes
     
-    with Pool() as p:
-        # p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
-        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
+    for i in range(5):
+        p = multiprocessing.Process(target=p_function(10, -1))
+        jobs.append(p)
+        p.start()
+    
+    # with Pool() as p:
+    #     # p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
+    #     p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
     
     # Print the optimization results
     trial = study.best_trial
