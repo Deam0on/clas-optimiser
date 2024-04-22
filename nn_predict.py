@@ -66,6 +66,10 @@ def constraint_func(params, index, bound, lower=True):
         return params[index] - bound  # For lower bound
     else:
         return bound - params[index]  # For upper bound
+        
+def p_function(objective_function, initial_guess, optimized_params, constraints):
+    result = minimize(objective_function, initial_guess, method='COBYLA',
+                       options=optimized_params, constraints=constraints)
 
 if __name__ == '__main__':
 
@@ -94,10 +98,14 @@ if __name__ == '__main__':
         # Upper bound constraint for each parameter
         constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, upper_bound, False)})
 
-
-    # Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
-    result = minimize(objective_function, initial_guess, method='COBYLA',
-                      options=optimized_params, constraints=constraints)
+        
+    for i in range(5):
+        p = multiprocessing.Process(target=p_function(objective_function, initial_guess, optimized_params, constraints))
+        jobs.append(p)
+        p.start()
+    # # Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
+    # result = minimize(objective_function, initial_guess, method='COBYLA',
+    #                   options=optimized_params, constraints=constraints)
 
     if result.success:
         optimal_inputs = np.round(result.x, 2)
