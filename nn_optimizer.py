@@ -44,6 +44,10 @@ def trial_time_callback(study, trial):
         study.trial_times[trial.number]['duration'] = duration
         print(f"Trial {trial.number} completed in {duration:.2f} seconds.")
 
+def optuna_optimize_function(n_trials=10):
+    for _ in tqdm(range(n_trials), desc="Optimizing"):
+        study.optimize(optimize_with_cobyla, n_trials=1, callbacks=[trial_time_callback])
+
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -94,7 +98,6 @@ def optimize_with_cobyla(trial):
     return result.fun
 
 
-
 if __name__ == '__main__':
 
     # Load model
@@ -115,9 +118,12 @@ if __name__ == '__main__':
     # study = optuna.create_study(direction='minimize')
     study = optuna.create_study(sampler=optuna.samplers.CmaEsSampler(), direction='minimize')
     # study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
-    
+
     with Pool() as p:
-        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
+        p.map(optuna_optimize_function, [10]*4)  # Assuming you want to run 10 trials on 4 different processes
+    
+    # with Pool() as p:
+    #     p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
     
     # Print the optimization results
     trial = study.best_trial
