@@ -128,7 +128,7 @@ if __name__ == '__main__':
     #     p.map(optuna_optimize_function, [10]*4)  # Assuming you want to run 10 trials on 4 different processes
     
     for i in range(5):
-        p = multiprocessing.Process(target=p_function(10, -1))
+        p = multiprocessing.Process(target=p_function(2, -1))
         jobs.append(p)
         p.start()
     
