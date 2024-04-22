@@ -29,6 +29,21 @@ import json
 
 from multiprocessing import Pool
 
+import time
+from tqdm import tqdm
+
+def trial_time_callback(study, trial):
+    if not hasattr(study, 'trial_times'):
+        study.trial_times = {}
+    if trial.number not in study.trial_times:
+        study.trial_times[trial.number] = {}
+        study.trial_times[trial.number]['start'] = time.time()
+    else:
+        study.trial_times[trial.number]['end'] = time.time()
+        duration = study.trial_times[trial.number]['end'] - study.trial_times[trial.number]['start']
+        study.trial_times[trial.number]['duration'] = duration
+        print(f"Trial {trial.number} completed in {duration:.2f} seconds.")
+
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -102,7 +117,7 @@ if __name__ == '__main__':
     # study = optuna.create_study(sampler=optuna.samplers.TPESampler(), direction='minimize')
     
     with Pool() as p:
-        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
+        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
     
     # Print the optimization results
     trial = study.best_trial
