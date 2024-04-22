@@ -98,7 +98,7 @@ def optimize_with_cobyla(trial):
     return result.fun
 
 def p_function(trials, jobs):
-    study.optimize(optimize_with_cobyla, n_trials=trials, n_jobs=jobs, callbacks=[trial_time_callback])
+    study.optimize(optimize_with_cobyla, n_trials=trials, n_jobs=jobs)
 
 
 if __name__ == '__main__':
