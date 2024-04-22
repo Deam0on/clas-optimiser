@@ -27,8 +27,6 @@ from scipy.optimize import minimize
 from keras.models import load_model
 import json
 
-import multiprocessing
-
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -69,9 +67,9 @@ def constraint_func(params, index, bound, lower=True):
     else:
         return bound - params[index]  # For upper bound
         
-def p_function(objective_function, initial_guess, optimized_params, constraints):
-    result = minimize(objective_function, initial_guess, method='COBYLA',
-                       options=optimized_params, constraints=constraints)
+# def p_function(objective_function, initial_guess, optimized_params, constraints):
+#     result = minimize(objective_function, initial_guess, method='COBYLA',
+#                        options=optimized_params, constraints=constraints)
 
 if __name__ == '__main__':
 
@@ -103,13 +101,13 @@ if __name__ == '__main__':
         constraints.append({'type': 'ineq', 'fun': constraint_func, 'args': (i, upper_bound, False)})
 
         
-    for i in range(5):
-        p = multiprocessing.Process(target=p_function(objective_function, initial_guess, optimized_params, constraints))
-        jobs.append(p)
-        p.start()
-    # # Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
-    # result = minimize(objective_function, initial_guess, method='COBYLA',
-    #                   options=optimized_params, constraints=constraints)
+    # for i in range(5):
+    #     p = multiprocessing.Process(target=p_function(objective_function, initial_guess, optimized_params, constraints))
+    #     jobs.append(p)
+    #     p.start()
+    # Run optimization with COBYLA using optimized parameters to find inputs that match the target outputs
+    result = minimize(objective_function, initial_guess, method='COBYLA',
+                      options=optimized_params, constraints=constraints)
 
     if result.success:
         optimal_inputs = np.round(result.x, 2)
