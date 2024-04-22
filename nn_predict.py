@@ -27,6 +27,8 @@ from scipy.optimize import minimize
 from keras.models import load_model
 import json
 
+import multiprocessing
+
 def csv_to_json(csv_file_path, json_file_path):
     # Load the CSV data
     data = pd.read_csv(csv_file_path, header=None, names=['Key', 'Value'])
@@ -73,6 +75,8 @@ def p_function(objective_function, initial_guess, optimized_params, constraints)
 
 if __name__ == '__main__':
 
+    jobs = []
+    
     # Load model
     # model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.h5')  # Loads the model
     model = load_model('/home/deamoon_uw_nn/bucket_source/uw_nn.keras')  # Loads the model
