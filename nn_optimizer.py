@@ -29,20 +29,20 @@ import json
 
 from multiprocessing import Pool
 
-import time
-from tqdm import tqdm
+# import time
+# from tqdm import tqdm
 
-def trial_time_callback(study, trial):
-    if not hasattr(study, 'trial_times'):
-        study.trial_times = {}
-    if trial.number not in study.trial_times:
-        study.trial_times[trial.number] = {}
-        study.trial_times[trial.number]['start'] = time.time()
-    else:
-        study.trial_times[trial.number]['end'] = time.time()
-        duration = study.trial_times[trial.number]['end'] - study.trial_times[trial.number]['start']
-        study.trial_times[trial.number]['duration'] = duration
-        print(f"Trial {trial.number} completed in {duration:.2f} seconds.")
+# def trial_time_callback(study, trial):
+#     if not hasattr(study, 'trial_times'):
+#         study.trial_times = {}
+#     if trial.number not in study.trial_times:
+#         study.trial_times[trial.number] = {}
+#         study.trial_times[trial.number]['start'] = time.time()
+#     else:
+#         study.trial_times[trial.number]['end'] = time.time()
+#         duration = study.trial_times[trial.number]['end'] - study.trial_times[trial.number]['start']
+#         study.trial_times[trial.number]['duration'] = duration
+#         print(f"Trial {trial.number} completed in {duration:.2f} seconds.")
 
 # def optuna_optimize_function(n_trials=10):
 #     for _ in tqdm(range(n_trials), desc="Optimizing"):
@@ -123,7 +123,8 @@ if __name__ == '__main__':
     #     p.map(optuna_optimize_function, [10]*4)  # Assuming you want to run 10 trials on 4 different processes
     
     with Pool() as p:
-        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
+        # p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=4, callbacks=[trial_time_callback]))
+        p.map(study.optimize(optimize_with_cobyla, n_trials=10, n_jobs=-1))
     
     # Print the optimization results
     trial = study.best_trial
